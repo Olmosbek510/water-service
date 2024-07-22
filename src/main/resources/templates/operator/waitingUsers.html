@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Delivery Operator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            margin: 0;
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            width: 100%;
+        }
+
+        .menu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            padding: 15px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .menu-item:hover {
+            background-color: #34495e;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .page {
+            display: block; /* Change to block to make it visible by default */
+        }
+
+        .sub-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .sub-nav h2 {
+            margin: 0;
+        }
+
+        .sub-nav input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .users-table th, .users-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .users-table th {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        .users-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .users-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .users-table a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .actions button {
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .actions button:hover {
+            background-color: #2ecc71;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo">
+            <h1>Water Delivery</h1>
+        </div>
+        <nav class="menu">
+            <ul>
+                <li class="menu-item"><a style="color: white" href="/new-users">New Users</a></li>
+                <li class="menu-item"><a style="color: white" href="/customers">Customers</a></li>
+                <li class="menu-item"><a style="color: white" href="/settings">Settings</a></li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="content">
+        <div id="new-users" class="page">
+            <nav class="sub-nav">
+                <h2>New Users</h2>
+                <input type="text" placeholder="Search...">
+            </nav>
+            <table class="users-table">
+                <thead>
+                <tr>
+                    <th>Phone</th>
+                    <th>Created At</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="user:${unverifiedUsers}">
+                    <tr>
+                        <td th:text="${user.phone}"></td>
+                        <td th:text="${user.getDate()}"></td>
+                        <td class="actions">
+                            <form th:action="${'/operator/userverify/' + user.id}" method="post">
+                                <button type="submit">Start</button>
+                            </form>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+            </table>
+
+        </div>
+        <div id="customers" class="page" style="display: none;">Customers Content</div>
+        <div id="settings" class="page" style="display: none;">Settings Content</div>
+    </main>
+</div>
+</body>
+</html>
