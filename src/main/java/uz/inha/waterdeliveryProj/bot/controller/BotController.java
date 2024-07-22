@@ -21,9 +21,9 @@ public class BotController {
             if (message.text() != null) {
                 String text = message.text();
                 if (text.equals("/start")) {
-                    if(tgUser.isVerified()){
+                    if (tgUser.isVerified()) {
 
-                    }else {
+                    } else {
                         botService.acceptStartAskContact(message, tgUser);
                     }
                 }
@@ -43,6 +43,12 @@ public class BotController {
             TelegramUser tgUser = botService.getOrCreateTelegramUser(update.callbackQuery().from().id());
             if (tgUser.getState().equals(TelegramState.SELECT_REGION)) {
                 botService.acceptRegionSendLocation(callbackQuery, tgUser);
+            } else if (tgUser.checkState(TelegramState.START_ORDERING)) {
+                botService.startOrdering(callbackQuery, tgUser);
+            } else if (tgUser.checkState(TelegramState.SELECT_BOTTLE_TYPE)) {
+                botService.acceptBottleTypeShowSelectNumber(callbackQuery, tgUser);
+            } else if (tgUser.checkState(TelegramState.SELECT_BOTTLE_NUMBER)) {
+                botService.changeBottleNumber(callbackQuery, tgUser);
             }
         }
     }

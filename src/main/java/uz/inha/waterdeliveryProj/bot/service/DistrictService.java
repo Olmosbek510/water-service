@@ -13,4 +13,6 @@ public interface DistrictService {
     District findBySimilarity(String districtName);
 
     District save(District district);
+
+    District findById(UUID districtId);
 }

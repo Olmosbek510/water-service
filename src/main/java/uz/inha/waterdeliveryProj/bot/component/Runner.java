@@ -5,18 +5,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import uz.inha.waterdeliveryProj.bot.entity.District;
-import uz.inha.waterdeliveryProj.bot.entity.Region;
-import uz.inha.waterdeliveryProj.bot.entity.Role;
-import uz.inha.waterdeliveryProj.bot.entity.User;
+import uz.inha.waterdeliveryProj.bot.entity.*;
 import uz.inha.waterdeliveryProj.bot.entity.enums.RoleName;
-import uz.inha.waterdeliveryProj.bot.service.DistrictService;
-import uz.inha.waterdeliveryProj.bot.service.RegionService;
-import uz.inha.waterdeliveryProj.bot.service.RoleService;
-import uz.inha.waterdeliveryProj.bot.service.UserService;
+import uz.inha.waterdeliveryProj.bot.service.*;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
@@ -26,6 +22,8 @@ public class Runner implements CommandLineRunner {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final UserService userService;
+    private final BottleService bottleService;
+    private final DeliveryTimeService deliveryTimeService;
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
 
@@ -39,6 +37,18 @@ public class Runner implements CommandLineRunner {
 //                ))
 //                .build();
 //        userService.save(user);
+        deliveryTimeService.saveAll(
+                List.of(
+                        DeliveryTime.builder()
+                                .startTime(LocalTime.of(9, 0))
+                                .endTime(LocalTime.of(12, 0))
+                                .build(),
+                        DeliveryTime.builder()
+                                .startTime(LocalTime.of(13, 0))
+                                .endTime(LocalTime.of(18, 0))
+                                .build()
+                )
+        );
         if (ddl.equals("create")) {
             regionService.saveAll(List.of(
                     Region.builder()
