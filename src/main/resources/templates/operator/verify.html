@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify User</title>
+    <link rel="stylesheet" href="/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        h1, h3 {
+            margin-top: 20px;
+        }
+
+        .map-container {
+            margin-top: 20px;
+        }
+
+        .map-container #map {
+            height: 80vh; /* Make the map occupy a large portion of the viewport height */
+            width: 100%;
+        }
+
+        .form-label {
+            margin-top: 20px;
+        }
+
+        .coordinates {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <h1 class="text-center text-primary">User Info</h1>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 th:text="${userInfo.user.phone}" class="card-title"></h2>
+                    <h4 th:text="${userInfo.region.name}" class="card-subtitle mb-2 text-muted"></h4>
+                    <div class="form-group">
+                        <label for="districtSelect" class="form-label">Select District:</label>
+                        <select id="districtSelect" class="form-control">
+                            <option th:if="${currentDistrict == null}" value="" selected disabled>Select district
+                            </option>
+                            <option th:each="district: ${districts}" th:text="${district.name}"
+                                    th:value="${district.id}"
+                                    th:selected="${currentDistrict != null} ? ${district.id} == ${currentDistrict.id} : false">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group form-label">
+                        <label for="address">Address Line:</label>
+                        <textarea id="address" class="form-control"></textarea>
+                    </div>
+                    <div class="coordinates">
+                        <p>Longitude: <span id="longitude"></span></p>
+                        <p>Latitude: <span id="latitude"></span></p>
+                    </div>
+                    <div>
+                        <form action="/operator/wronglocation" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                            <input type="hidden" th:value="${userInfo.id}" name="userId"/>
+                            <button type="submit" class="btn btn-danger text-white">
+                                Wrong location
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://api-maps.yandex.ru/2.1/?lang=en_US" type="text/javascript"></script>
+<script>
+    ymaps.ready(initMap);
+
+    function initMap() {
+        var latitude = [[${userInfo.location.latitude}]];
+        var longitude = [[${userInfo.location.longitude}]];
+
+        var myMap = new ymaps.Map('map', {
+            center: [latitude, longitude],
+            zoom: 16,
+            controls: ['zoomControl', 'geolocationControl']
+        });
+
+        var myPlacemark = new ymaps.Placemark(myMap.getCenter(), {
+            hintContent: 'Drag me!',
+            balloonContent: 'You can drag this marker to update the coordinates.'
+        }, {
+            draggable: true
+        });
+
+        myMap.geoObjects.add(myPlacemark);
+
+        myPlacemark.events.add('dragend', function (e) {
+            var coords = e.get('target').geometry.getCoordinates();
+            myMap.setCenter(coords);
+            document.getElementById('latitude').innerText = coords[0];
+            document.getElementById('longitude').innerText = coords[1];
+        });
+    }
+</script>
+</body>
+</html>
