@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uz.inha.waterdeliveryProj.bot.entity.TelegramUser;
 import uz.inha.waterdeliveryProj.bot.entity.enums.TelegramState;
+import uz.inha.waterdeliveryProj.bot.model.request.VerifyUserDTO;
 import uz.inha.waterdeliveryProj.bot.service.BotService;
 import uz.inha.waterdeliveryProj.bot.service.OperatorControllerService;
 import uz.inha.waterdeliveryProj.bot.service.TelegramUserService;
@@ -44,6 +45,11 @@ public class OperatorController {
     public String wrongLocation(@RequestParam(name = "userId") UUID tgUserId) {
         TelegramUser tgUser = telegramUserService.findById(tgUserId);
         botService.sendLocationButton(tgUser);
+        return "redirect:/operator";
+    }
+    @PostMapping("/verify")
+    public String verify(@ModelAttribute VerifyUserDTO verifyUserDTO){
+        botService.verifyUser(verifyUserDTO);
         return "redirect:/operator";
     }
 }

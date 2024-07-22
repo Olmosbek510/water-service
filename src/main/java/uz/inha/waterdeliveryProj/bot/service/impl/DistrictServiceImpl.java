@@ -35,4 +35,9 @@ public class DistrictServiceImpl implements DistrictService {
     public District save(District district) {
         return districtRepository.save(district);
     }
+
+    @Override
+    public District findById(UUID districtId) {
+        return districtRepository.findById(districtId).orElseThrow(() -> new RuntimeException("District not found"));
+    }
 }

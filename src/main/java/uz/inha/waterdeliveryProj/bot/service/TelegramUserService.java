@@ -2,6 +2,7 @@ package uz.inha.waterdeliveryProj.bot.service;
 
 import uz.inha.waterdeliveryProj.bot.entity.TelegramUser;
 import uz.inha.waterdeliveryProj.bot.entity.enums.TelegramState;
+import uz.inha.waterdeliveryProj.bot.model.request.VerifyUserDTO;
 
 import java.util.List;
 import java.util.Optional;

@@ -4,16 +4,21 @@ import com.pengrad.telegrambot.model.request.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.inha.waterdeliveryProj.bot.constants.BotConstant;
+import uz.inha.waterdeliveryProj.bot.entity.BottleType;
 import uz.inha.waterdeliveryProj.bot.entity.Region;
+import uz.inha.waterdeliveryProj.bot.entity.TelegramUser;
+import uz.inha.waterdeliveryProj.bot.service.BottleService;
 import uz.inha.waterdeliveryProj.bot.service.RegionService;
 import uz.inha.waterdeliveryProj.bot.utils.BotUtil;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
 public class BotUtilImpl implements BotUtil {
     private final RegionService regionService;
+    private final BottleService bottleService;
 
     @Override
     public Keyboard generateContactButton() {
@@ -40,6 +45,47 @@ public class BotUtilImpl implements BotUtil {
 
             );
         }
+        return inlineKeyboardMarkup;
+    }
+
+    @Override
+    public Keyboard generateOrderBtns() {
+        return new InlineKeyboardMarkup(
+                new InlineKeyboardButton(BotConstant.ORDER_BTN).callbackData(BotConstant.START_ORDERING)
+        );
+    }
+
+    @Override
+    public Keyboard generateBottleTypesBtns() {
+        List<BottleType> activeBottles = bottleService.findActives();
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        IntStream.range(0, activeBottles.size() - 1)
+                .forEach(i -> inlineKeyboardMarkup.addRow(
+                        new InlineKeyboardButton(activeBottles.get(i).getType()).callbackData(activeBottles.get(i).getId().toString()),
+                        new InlineKeyboardButton(activeBottles.get(i + 1).getType()).callbackData(activeBottles.get(i + 1).getId().toString())));
+        return inlineKeyboardMarkup;
+    }
+
+    @Override
+    public InlineKeyboardMarkup generateBottleNumberButtons(TelegramUser tgUser) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.addRow(
+                new InlineKeyboardButton("+").callbackData(BotConstant.PLUS),
+                new InlineKeyboardButton(tgUser.getBottleCount().toString()).callbackData("number"),
+                new InlineKeyboardButton("-").callbackData(BotConstant.MINUS)
+        );
+        inlineKeyboardMarkup.addRow(new InlineKeyboardButton(
+                BotConstant.CONFIRM_BTN
+        ).callbackData(BotConstant.CONFIRM));
+        return inlineKeyboardMarkup;
+    }
+
+    @Override
+    public Keyboard generateConfirmBtn() {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        inlineKeyboardMarkup.addRow(new InlineKeyboardButton(
+                BotConstant.CONFIRM
+        ).callbackData(BotConstant.CONFIRM));
         return inlineKeyboardMarkup;
     }
 }

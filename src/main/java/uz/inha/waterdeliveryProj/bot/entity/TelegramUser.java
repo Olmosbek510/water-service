@@ -29,4 +29,13 @@ public class TelegramUser extends AbsEntity {
     @Embedded
     private Location location;
     private boolean verified = false;
+    private String addressLine;
+    private Integer orderCount = 1;
+    public boolean checkState(TelegramState telegramState) {
+        return this.state.equals(telegramState);
+    }
+    private Integer bottleCount = 2;
+    @ManyToOne(fetch = FetchType.EAGER)
+    private BottleType bottleType;
+    private Integer editingMessageId;
 }
