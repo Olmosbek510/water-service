@@ -5,12 +5,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.inha.waterdeliveryProj.bot.constants.BotConstant;
 import uz.inha.waterdeliveryProj.bot.entity.BottleType;
+import uz.inha.waterdeliveryProj.bot.entity.DeliveryTime;
 import uz.inha.waterdeliveryProj.bot.entity.Region;
 import uz.inha.waterdeliveryProj.bot.entity.TelegramUser;
 import uz.inha.waterdeliveryProj.bot.service.BottleService;
+import uz.inha.waterdeliveryProj.bot.service.DeliveryTimeService;
 import uz.inha.waterdeliveryProj.bot.service.RegionService;
 import uz.inha.waterdeliveryProj.bot.utils.BotUtil;
 
+import java.time.LocalTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -19,7 +23,7 @@ import java.util.stream.IntStream;
 public class BotUtilImpl implements BotUtil {
     private final RegionService regionService;
     private final BottleService bottleService;
-
+    private final DeliveryTimeService deliveryTimeService;
     @Override
     public Keyboard generateContactButton() {
         return new ReplyKeyboardMarkup(
@@ -86,6 +90,22 @@ public class BotUtilImpl implements BotUtil {
         inlineKeyboardMarkup.addRow(new InlineKeyboardButton(
                 BotConstant.CONFIRM
         ).callbackData(BotConstant.CONFIRM));
+        return inlineKeyboardMarkup;
+    }
+
+    @Override
+    public Keyboard generateDeliveryScheduleBtns(TelegramUser tgUser, List<DeliveryTime> times) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        List<InlineKeyboardButton> btns = new LinkedList<>();
+        for (int i = 1; i < times.size(); i++) {
+            DeliveryTime deliveryTime = times.get(i);
+            if(deliveryTimeService.canFitToday(deliveryTime, tgUser) && deliveryTimeService.deliveryTimeIsNow(deliveryTime)){
+                btns.add(new InlineKeyboardButton(
+                        deliveryTime.toString()
+                ).callbackData(deliveryTime.getId().toString()));
+            }
+        }
+        inlineKeyboardMarkup.addRow(btns.toArray(value -> new InlineKeyboardButton[0]));
         return inlineKeyboardMarkup;
     }
 }

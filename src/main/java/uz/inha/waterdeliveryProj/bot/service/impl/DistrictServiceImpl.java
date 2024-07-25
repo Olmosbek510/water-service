@@ -2,7 +2,6 @@ package uz.inha.waterdeliveryProj.bot.service.impl;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.inha.waterdeliveryProj.bot.entity.District;
 import uz.inha.waterdeliveryProj.bot.service.DistrictService;

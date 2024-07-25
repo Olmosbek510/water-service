@@ -7,14 +7,11 @@ import org.springframework.ui.Model;
 import uz.inha.waterdeliveryProj.bot.entity.District;
 import uz.inha.waterdeliveryProj.bot.entity.TelegramUser;
 import uz.inha.waterdeliveryProj.bot.entity.enums.TelegramState;
-import uz.inha.waterdeliveryProj.bot.model.Location;
-import uz.inha.waterdeliveryProj.bot.model.response.UserInfoDTO;
 import uz.inha.waterdeliveryProj.bot.model.response.WaitingUserDto;
 import uz.inha.waterdeliveryProj.bot.service.DistrictService;
 import uz.inha.waterdeliveryProj.bot.service.OperatorControllerService;
 import uz.inha.waterdeliveryProj.bot.service.TelegramUserService;
 import uz.inha.waterdeliveryProj.bot.utils.DistrictUtil;
-import uz.inha.waterdeliveryProj.repo.DistrictRepository;
 
 import java.util.List;
 import java.util.UUID;

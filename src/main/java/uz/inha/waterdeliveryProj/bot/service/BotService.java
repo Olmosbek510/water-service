@@ -12,8 +12,8 @@ import java.util.List;
 
 public interface BotService {
     Location COMPANY_LOCATION = Location.builder()
-            .latitude(41.32662009565237F)
-            .longitude( 69.22862417132062F)
+            .latitude(41.32662009565237f)
+            .longitude( 69.22862417132062f)
             .build();
     TelegramUser getOrCreateTelegramUser(Long chatId);
 

@@ -17,4 +17,5 @@ public class BotConstant {
     public static final String MINUS = "MINUS";
     public static final String CONFIRM_BTN = "Confirm ✅";
     public static final String CONFIRM = "CONFIRM";
+    public static final String TODAY = "Today";
 }
