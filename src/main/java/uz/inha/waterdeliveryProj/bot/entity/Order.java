@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import uz.inha.waterdeliveryProj.bot.entity.enums.OrderStatus;
 import uz.inha.waterdeliveryProj.bot.model.Location;
 
 import java.time.LocalDate;
@@ -33,4 +34,6 @@ public class Order {
     private Location location;
     @ManyToOne
     private BottleType bottleType;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 }

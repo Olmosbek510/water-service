@@ -22,6 +22,7 @@ import uz.inha.waterdeliveryProj.bot.utils.BotUtil;
 import uz.inha.waterdeliveryProj.bot.utils.PhoneRepairUtil;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -198,11 +199,7 @@ public class BotServiceImpl implements BotService {
     }
     @Override
     public void today(List<DeliveryTime> times, TelegramUser tgUser) {
-        for (int i = 1; i < times.size(); i++) {
-            DeliveryTime deliveryTime = times.get(i);
-            if(deliveryTimeService.canFitToday(deliveryTime, tgUser)){
-
-            }
-        }
+        SendMessage sendMessage = new SendMessage(tgUser.getChatId(), BotConstant.TODAY);
+        sendMessage.replyMarkup(botUtil.generateDeliveryScheduleBtns(tgUser, times));
     }
 }

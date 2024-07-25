@@ -1,19 +1,15 @@
 package uz.inha.waterdeliveryProj.bot.controller;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import uz.inha.waterdeliveryProj.bot.entity.TelegramUser;
-import uz.inha.waterdeliveryProj.bot.entity.enums.TelegramState;
 import uz.inha.waterdeliveryProj.bot.model.request.VerifyUserDTO;
 import uz.inha.waterdeliveryProj.bot.service.BotService;
 import uz.inha.waterdeliveryProj.bot.service.OperatorControllerService;
 import uz.inha.waterdeliveryProj.bot.service.TelegramUserService;
-import uz.inha.waterdeliveryProj.bot.service.UserService;
 
-import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -25,7 +21,7 @@ public class OperatorController {
     private final BotService botService;
 
     @GetMapping
-    public String operatorPage(Model model) {
+    public String operatorPage() {
         return "operator/operator";
     }
 
