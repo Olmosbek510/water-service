@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import uz.inha.waterdeliveryProj.bot.entity.enums.OrderStatus;
 import uz.inha.waterdeliveryProj.bot.model.Location;
@@ -20,8 +21,8 @@ import java.time.LocalDateTime;
 @Table(name = "orders")
 public class Order {
     @Id
-    private Integer id;
-    @ManyToOne
+    private String id;
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private TelegramUser telegramUser;
     @CreationTimestamp
     private LocalDate day;

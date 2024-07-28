@@ -17,7 +17,7 @@ public class WaterDeliveryApplication {
     private static String botToken = "7282948705:AAEjTuUqvbEj5KaIvrzWJX7XvqsC_3j3EUQ";
     public static void main(String[] args) {
         SpringApplication.run(WaterDeliveryApplication.class, args);
-//        stopped in 1:16:22 of the last video 2:02:55
+//        stopped in 1:24:05 of the last video 1:53:59
     }
 
     @Bean

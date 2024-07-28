@@ -3,6 +3,7 @@ package uz.inha.waterdeliveryProj.bot.utils.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import uz.inha.waterdeliveryProj.bot.model.Location;
 import uz.inha.waterdeliveryProj.bot.utils.DistanceUtil;
 
@@ -13,6 +14,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DistanceUtilImpl implements DistanceUtil {
     private static final String API_KEY = "AIzaSyBW2VQF8bZ1r6IpZ4Imtqaydl4ohyyrOsQ";
+
+    @Override
+    public String getOptimizedRoute(List<Location> locations, Location from) {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = buildDirectionsApiUrl(locations, from);
+        return restTemplate.getForObject(url, String.class);
+    }
 
     @Override
     public String buildDirectionsApiUrl(List<Location> locations, Location locationFrom) {

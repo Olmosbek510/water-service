@@ -10,6 +10,7 @@ import uz.inha.waterdeliveryProj.bot.entity.enums.OrderStatus;
 import uz.inha.waterdeliveryProj.bot.entity.enums.RoleName;
 import uz.inha.waterdeliveryProj.bot.model.Location;
 import uz.inha.waterdeliveryProj.bot.service.*;
+import uz.inha.waterdeliveryProj.bot.utils.DistanceUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -29,6 +30,7 @@ public class Runner implements CommandLineRunner {
     private final BottleService bottleService;
     private final DeliveryTimeService deliveryTimeService;
     private final OrderService orderService;
+    private final DistanceUtil distanceUtil;
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String ddl;
 
@@ -41,19 +43,7 @@ public class Runner implements CommandLineRunner {
 //                        roleService.findByName(RoleName.ROLE_OPERATOR)
 //                ))
 //                .build();
-//        userService.save(user);
-        deliveryTimeService.saveAll(
-                List.of(
-                        DeliveryTime.builder()
-                                .startTime(LocalTime.of(9, 0))
-                                .endTime(LocalTime.of(12, 0))
-                                .build(),
-                        DeliveryTime.builder()
-                                .startTime(LocalTime.of(13, 0))
-                                .endTime(LocalTime.of(18, 0))
-                                .build()
-                )
-        );
+//        userService.save(user)
         if (ddl.equals("create")) {
             regionService.saveAll(List.of(
                     Region.builder()
@@ -111,30 +101,32 @@ public class Runner implements CommandLineRunner {
         }
     }
 
-    private void genRandomOrders(){
-        orderService.saveAll(List.of(
-                Order.builder()
-                        .telegramUser(TelegramUser.builder()
-                                .district(districtService.findById(UUID.fromString("9ba180ac-2302-468a-8a3d-c6055ccf11a1")))
-                                .build())
-                        .day(LocalDate.now())
-                        .orderStatus(OrderStatus.CREATED)
-                        .deliveryTime(deliveryTimeService.findById(1))
-                        .bottleCount(0)
-                        .bottleType(bottleService.findById(1))
-                        .location(new Location(41.326066256161816f, 69.21278326762867f))
-                        .build(),
-                Order.builder()
-                        .telegramUser(TelegramUser.builder()
-                                .district(districtService.findById(UUID.fromString("9ba180ac-2302-468a-8a3d-c6055ccf11a1")))
-                                .build())
-                        .day(LocalDate.now())
-                        .orderStatus(OrderStatus.CREATED)
-                        .deliveryTime(deliveryTimeService.findById(1))
-                        .bottleCount(0)
-                        .bottleType(bottleService.findById(1))
-                        .location(new Location(41.32205578006318f, 69.21790052226007f))
-                        .build()
-        ));
-    }
+//    private void genRandomOrders(){
+//        orderService.saveAll(List.of(
+//                Order.builder()
+//                        .id(1)
+//                        .telegramUser(TelegramUser.builder()
+//                                .district(districtService.findById(UUID.fromString("9ba180ac-2302-468a-8a3d-c6055ccf11a1")))
+//                                .build())
+//                        .day(LocalDate.now())
+//                        .orderStatus(OrderStatus.CREATED)
+//                        .deliveryTime(deliveryTimeService.findById(1))
+//                        .bottleCount(0)
+//                        .bottleType(bottleService.findById(1))
+//                        .location(new Location(41.326066256161816f, 69.21278326762867f))
+//                        .build(),
+//                Order.builder()
+//                        .id(2)
+//                        .telegramUser(TelegramUser.builder()
+//                                .district(districtService.findById(UUID.fromString("9ba180ac-2302-468a-8a3d-c6055ccf11a1")))
+//                                .build())
+//                        .day(LocalDate.now())
+//                        .orderStatus(OrderStatus.CREATED)
+//                        .deliveryTime(deliveryTimeService.findById(1))
+//                        .bottleCount(0)
+//                        .bottleType(bottleService.findById(1))
+//                        .location(new Location(41.32205578006318f, 69.21790052226007f))
+//                        .build()
+//        ));
+//    }
 }

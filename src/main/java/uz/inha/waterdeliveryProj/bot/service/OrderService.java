@@ -11,4 +11,6 @@ public interface OrderService {
     List<Order> findAllByTelegramUserDistrictAndDeliveryTimeAndDay(District district, DeliveryTime deliveryTime, LocalDate now);
 
     List<Order> saveAll(List<Order> orders);
+
+    Order save(Order order);
 }

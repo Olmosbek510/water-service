@@ -22,7 +22,7 @@ public class BotController {
                 String text = message.text();
                 if (text.equals("/start")) {
                     if (tgUser.isVerified()) {
-
+                        botService.sendCabinet(tgUser);
                     } else {
                         botService.acceptStartAskContact(message, tgUser);
                     }
@@ -49,6 +49,10 @@ public class BotController {
                 botService.acceptBottleTypeShowSelectNumber(callbackQuery, tgUser);
             } else if (tgUser.checkState(TelegramState.SELECT_BOTTLE_NUMBER)) {
                 botService.changeBottleNumber(callbackQuery, tgUser);
+            } else if (tgUser.checkState(TelegramState.CONFIRM_ORDER)) {
+                botService.acceptOrderTimeShowConfirmation(callbackQuery, tgUser);
+            } else if (tgUser.checkState(TelegramState.CREATE_ORDER)) {
+                botService.makeAnOrder(callbackQuery, tgUser);
             }
         }
     }

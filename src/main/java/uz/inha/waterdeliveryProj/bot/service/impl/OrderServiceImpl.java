@@ -18,11 +18,16 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findAllByTelegramUserDistrictAndDeliveryTimeAndDay(District district, DeliveryTime deliveryTime, LocalDate now) {
-        return orderRepository.findAllByTelegramUserDistrictAndDeliveryTimeAndDay(district, deliveryTime, now);
+        return orderRepository.findAllByTelegramUserDistrictAndDeliveryTimeAndDayOrderById(district, deliveryTime, now);
     }
 
     @Override
     public List<Order> saveAll(List<Order> orders) {
         return orderRepository.saveAll(orders);
+    }
+
+    @Override
+    public Order save(Order order) {
+        return orderRepository.save(order);
     }
 }

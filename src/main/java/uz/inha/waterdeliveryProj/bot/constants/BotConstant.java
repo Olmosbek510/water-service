@@ -18,4 +18,16 @@ public class BotConstant {
     public static final String CONFIRM_BTN = "Confirm ✅";
     public static final String CONFIRM = "CONFIRM";
     public static final String TODAY = "Today";
+    public static final String TOMORROW = "Tomorrow";
+    public static final String CONFIRM_ORDER = "CONFIRM_ORDER";
+    public static final String ORDER_FINISH_MSG = "Your order accepted. Please be in desired destination in estimated time. Have a nice day.";
+    public static final String ORDER_INFO = """
+            <b>Order details:</b>
+            <b>%s</b> count: <b>%d</b>
+            <b>Total: %s soums</b>%n
+            Estimated delivery time:
+            Day: %s
+            Time: %s
+            """;
+    public static final String CANCEL = "Cancel ❌";
 }
