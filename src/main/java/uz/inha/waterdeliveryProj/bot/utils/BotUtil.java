@@ -2,13 +2,12 @@ package uz.inha.waterdeliveryProj.bot.utils;
 
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.model.request.Keyboard;
-import uz.inha.waterdeliveryProj.bot.entity.DeliveryTime;
+import com.pengrad.telegrambot.request.SendMessage;
 import uz.inha.waterdeliveryProj.bot.entity.TelegramUser;
-
-import java.util.List;
 
 public interface BotUtil {
     Keyboard generateContactButton();
+
     Keyboard generateLocationButton();
 
     Keyboard generateRegionButtons();
@@ -21,5 +20,9 @@ public interface BotUtil {
 
     Keyboard generateConfirmBtn();
 
-    Keyboard generateDeliveryScheduleBtns(TelegramUser tgUser, List<DeliveryTime> times);
+    void generateDeliveryScheduleBtns(TelegramUser tgUser);
+
+    Keyboard generateCheckoutButton();
+
+    String generateOrderText(TelegramUser tgUser);
 }

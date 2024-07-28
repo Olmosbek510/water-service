@@ -13,8 +13,9 @@ import java.util.List;
 public interface BotService {
     Location COMPANY_LOCATION = Location.builder()
             .latitude(41.32662009565237f)
-            .longitude( 69.22862417132062f)
+            .longitude(69.22862417132062f)
             .build();
+
     TelegramUser getOrCreateTelegramUser(Long chatId);
 
     void acceptStartAskContact(Message message, TelegramUser tgUser);
@@ -39,5 +40,11 @@ public interface BotService {
 
     void changeBottleNumber(CallbackQuery callbackQuery, TelegramUser tgUser);
 
-    void today(List<DeliveryTime> times, TelegramUser tgUser);
+    void showAvailableDeliveryTimes(TelegramUser tgUser);
+
+    void showNextThreeDays(TelegramUser tgUser);
+
+    void acceptOrderTimeShowConfirmation(CallbackQuery callbackQuery, TelegramUser tgUser);
+
+    void makeAnOrder(CallbackQuery callbackQuery, TelegramUser tgUser);
 }

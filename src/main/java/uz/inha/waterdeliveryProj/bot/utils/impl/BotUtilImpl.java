@@ -1,6 +1,8 @@
 package uz.inha.waterdeliveryProj.bot.utils.impl;
 
+import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.*;
+import com.pengrad.telegrambot.request.SendMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import uz.inha.waterdeliveryProj.bot.constants.BotConstant;
@@ -8,13 +10,16 @@ import uz.inha.waterdeliveryProj.bot.entity.BottleType;
 import uz.inha.waterdeliveryProj.bot.entity.DeliveryTime;
 import uz.inha.waterdeliveryProj.bot.entity.Region;
 import uz.inha.waterdeliveryProj.bot.entity.TelegramUser;
+import uz.inha.waterdeliveryProj.bot.entity.enums.TelegramState;
 import uz.inha.waterdeliveryProj.bot.service.BottleService;
 import uz.inha.waterdeliveryProj.bot.service.DeliveryTimeService;
 import uz.inha.waterdeliveryProj.bot.service.RegionService;
+import uz.inha.waterdeliveryProj.bot.service.TelegramUserService;
 import uz.inha.waterdeliveryProj.bot.utils.BotUtil;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -24,6 +29,9 @@ public class BotUtilImpl implements BotUtil {
     private final RegionService regionService;
     private final BottleService bottleService;
     private final DeliveryTimeService deliveryTimeService;
+    private final TelegramBot telegramBot;
+    private final TelegramUserService telegramUserService;
+
     @Override
     public Keyboard generateContactButton() {
         return new ReplyKeyboardMarkup(
@@ -94,18 +102,48 @@ public class BotUtilImpl implements BotUtil {
     }
 
     @Override
-    public Keyboard generateDeliveryScheduleBtns(TelegramUser tgUser, List<DeliveryTime> times) {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-        List<InlineKeyboardButton> btns = new LinkedList<>();
-        for (int i = 1; i < times.size(); i++) {
-            DeliveryTime deliveryTime = times.get(i);
-            if(deliveryTimeService.canFitToday(deliveryTime, tgUser) && deliveryTimeService.deliveryTimeIsNow(deliveryTime)){
+    public void generateDeliveryScheduleBtns(TelegramUser tgUser) {
+        List<LocalDate> days = deliveryTimeService.generateDays();
+        List<DeliveryTime> times = deliveryTimeService.findAll();
+        for (LocalDate day : days) {
+            InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+            SendMessage sendMessage = new SendMessage(tgUser.getChatId(), deliveryTimeService.getDayAsText(day));
+            List<InlineKeyboardButton> btns = new ArrayList<>();
+            for (int i = 0; i < times.size(); i++) {
+                if (i == 0 && day.equals(LocalDate.now()) || day.equals(LocalDate.now()) && LocalTime.now().isAfter(times.get(i).getStartTime())) {
+                    continue;
+                }
+                DeliveryTime deliveryTime = times.get(i);
                 btns.add(new InlineKeyboardButton(
                         deliveryTime.toString()
-                ).callbackData(deliveryTime.getId().toString()));
+                ).callbackData(day + "/" + deliveryTime.getId().toString()));
             }
+            inlineKeyboardMarkup.addRow(btns.toArray(value -> new InlineKeyboardButton[0]));
+            sendMessage.replyMarkup(inlineKeyboardMarkup);
+            telegramBot.execute(sendMessage);
+            tgUser.setState(TelegramState.CONFIRM_ORDER);
+            telegramUserService.save(tgUser);
         }
-        inlineKeyboardMarkup.addRow(btns.toArray(value -> new InlineKeyboardButton[0]));
-        return inlineKeyboardMarkup;
+    }
+
+    @Override
+    public Keyboard generateCheckoutButton() {
+        return new InlineKeyboardMarkup(
+                new InlineKeyboardButton(BotConstant.CONFIRM_BTN).callbackData(BotConstant.CONFIRM_ORDER),
+                new InlineKeyboardButton(BotConstant.CANCEL).callbackData(BotConstant.CANCEL)
+        );
+    }
+
+    @Override
+    public String generateOrderText(TelegramUser tgUser) {
+        return
+                BotConstant.ORDER_INFO
+               .formatted(
+                tgUser.getBottleType().getType(),
+                tgUser.getBottleCount(),
+                tgUser.calculateTotalPriceOfCurrentOrder(),
+                tgUser.getCurrentOrderDay(),
+                tgUser.getCurrentOrderDeliveryTime().toString()
+        );
     }
 }
